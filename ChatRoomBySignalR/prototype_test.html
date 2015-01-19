@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script type="text/javascript">
+        Array.prototype.each = function () {
+            var result = '';
+            if (!this) return;
+            for (var i = 0; i < this.length; i++) {
+                result += this[i] + ' ';
+            }
+
+            return result;
+        }
+
+
+        var numbers = [1, 1.2, 3, 4, 56];
+        console.log(numbers.each());
+
+        window.$ = window.$ || {};
+        //$.each = function (array, fn) {
+        //    //array[fn] = fn;
+        //    for (var i = 0; i < array.length; i++) {
+        //        array[i] = fn(array[i]);
+        //    }
+        //}
+        //$.makeEach = function (array, fn) {
+        //    array[fn] = fn;
+        //}
+
+        //function myEach() {
+        //    console.log("方法绑定成功!");
+        //}
+
+        //$.makeEach(numbers, myEach);
+
+        //numbers.myEach();
+
+        //$.each(numbers, function (n) { return n = n + 1; });
+        //console.log(numbers.each());
+
+        var nodeConstructor = function (data) {
+            this.data = data;
+        }
+
+        //链表连接器对象
+        var nodeList = {
+            first: null,//头结点
+            last: null,//尾巴节点
+            append: function (node) {//尾部添加节点
+                if (this._count == 0) {//添加都节点
+                    this.first = node;
+                    this.last = node;
+                    this.first.nextNode = node;
+                    this._count++;
+                }
+                else {
+                    this.last.nextNode = node;
+                    this.last = node;
+                    this._count++;
+                }
+            },
+            _count: 0,//
+            count: function () {//获得节点总数
+                return this._count;
+            },
+            traverse: function () {//遍历链表
+                var currnode = this.first;
+                var resultStr = '';
+                while (currnode != null) {
+                    resultStr += currnode.data + "  ";
+                    currnode = currnode.nextNode;
+                }
+                return resultStr;
+            },
+            nodeAt: function (i) {
+                if (i > this._count) {
+                    throw RangeError("超出链表范围!");
+                }
+                if (i == 1) {
+                    return this.first;
+                }
+                if (i == this._count) {
+                    return this.last;
+                }
+
+                var currNode = this.first;
+                var counter = 1;
+                while (true) {
+                    if (i == counter) {
+                        return currNode;
+                    }
+                    counter++;
+                    currNode = currNode.nextNode;
+                }
+            },
+            removeAt: function (i) {
+                if (i > this._count) {
+                    throw RangeError("超出链表范围!");
+                }
+                if (i == 1) {
+                    var secondnode = this.first.nextNode;
+                    this.first = null;
+                    this.first = secondnode;
+                    this._count--;
+                    return;
+                }
+                if (i == this._count) {//删除尾巴节点
+                    var lastSecondNode = this.nodeAt(i - 1);
+                    lastSecondNode.nextNode = null;
+                    this.last = lastSecondNode;
+                    this._count--;
+                    return;
+                }
+                //删除中间节点
+                var prveNode = this.nodeAt(i - 1);
+                var currNode = this.nodeAt(i);
+                var nextNode = this.nodeAt(i + 1);
+                currNode.nextNode = null;
+                prveNode.nextNode = nextNode;
+                this._count--;
+            },
+            insert: function (node, i) {
+                if (i > this._count) {
+                    throw new RangeError("索引超过链表范围!");
+                }
+                if (i == 1) {//在头部插入索引
+                    node.nextNode = this.first;
+                    this.first = node;
+                    this._count++;
+                    return;
+                }
+                if (i == this._count) {//在当前链表的尾部插入
+                    this.last.nextNode = node;
+                    this.last = node;
+                    this._count++;
+                    return;
+                }
+
+                //在中间插入
+                var prevNode = this.nodeAt(i);
+                var nextNode = this.nodeAt(i + 1);
+                prevNode.nextNode = node;
+                node.nextNode = nextNode;
+                this._count++;
+            }
+        };
+
+        for (var i = 1; i < 100; i++) {
+            eval('nodeList.append(new nodeConstructor(' + i + '))');
+        }
+        console.log("count:" + nodeList.count());
+        console.log("first:" + nodeList.first.data);
+        console.log("last:" + nodeList.last.data);
+        console.log("traverse:" + nodeList.traverse());
+    </script>
+</head>
+<body>
+
+</body>
+</html>
